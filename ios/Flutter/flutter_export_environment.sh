@@ -3,7 +3,7 @@
 export "FLUTTER_ROOT=/Users/d.florentina.calapod/workPlace/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/d.florentina.calapod/StudioProjects/Clima-Flutter"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
-export "FLUTTER_TARGET=/Users/d.florentina.calapod/StudioProjects/Clima-Flutter/lib/main.dart"
+export "FLUTTER_TARGET=/Users/d.florentina.calapod/StudioProjects/Clima-Flutter/scratch.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
