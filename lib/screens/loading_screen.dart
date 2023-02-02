@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:clima/services/location.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -11,48 +13,35 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     print(getLocation());
+    getData();
   }
 
   getLocation() async {
-    final hasPermission = await _handlePermission();
-
-    if (!hasPermission) {
-      return;
-    }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
-    setState(() {
-      print(position);
-    });
+    Location location = Location();
+    await location.getCurrentLocation();
+    print(location.latitude);
+    print(location.longitude);
   }
 
-  Future<bool> _handlePermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  void getData() async {
+    http.Response response =
+        await http.get(Uri.parse('https://samples.openweathermap.org/data/2.5/'
+            'weather?lat=35&lon=139&appid=b6907d289e10d714a6e88b30761fae22'));
 
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // do stuff
-      return false;
+    if (response.statusCode == 200) {
+      String data = response.body;
+
+      double temperature = jsonDecode(data)['main']['temp'];
+      print('temperature -->>>  $temperature');
+
+      int condition = jsonDecode(data)['weather'][0]['id'];
+      print('condition -->>>  $condition');
+
+      String cityName = jsonDecode(data)['name'];
+      print('cityName -->>>  $cityName');
+    } else {
+      print(response.statusCode);
     }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // do stuff
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      // do stuff
-
-      return false;
-    }
-    return true;
   }
 
   @override
